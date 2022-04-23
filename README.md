@@ -38,18 +38,20 @@ The formula number is the numerical description of the weave repeat unit. This p
 
 The color ratio is the number of different colors of threads in both warp and weft direction. This program takes the color ratio as input from the `-c` or `--color` flag. It is represented as the sequence of alphabets, each of which corresponds to a hex color code. This can be given as a sequence of alphabets e.g. `rrbb` where _r_ and _b_ corresponds to red and blue respectively and the sequence of these represent the color ratio, so in this case it represents 2:2 color ratio of red and blue in both warp and weft direction. Another way to do this is to put the number in front or back of the alphabet to represent the number of time they repeat e.g. `3r4b` is equivalent to `rrrbbbb`.
 
-*Supported colors:*
+**Suported colors:**
 
-- `0` -> black
-- `1` -> white
-- `r` -> red
-- `g` -> green
-- `b` -> blue
-- `y` -> yellow
-- `o` -> orange
-- `v` -> violet
-- `p` -> pink
-- `i` -> indigo
+| Symbol | Color  | Hex code |
+|--------|--------|----------|
+| `0`    | black  | #000000  |
+| `1`    | white  | #FFFFFF  |
+| `r`    | red    | #DA344D  |
+| `g`    | green  | #169873  |
+| `b`    | blue   | #0A369D  |
+| `y`    | yellow | #F7EE7F  |
+| `o`    | orange | #F26419  |
+| `v`    | violet | #4F345A  |
+| `p`    | pink   | #F15BB5  |
+| `i`    | indigo | #284B63  |
 
 
 #### Example usage

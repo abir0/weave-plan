@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw
 
 class Weave:
     Colors = {"0": "#000000",   # black
-              "1": "#ffffff",   # white
+              "1": "#FFFFFF",   # white
               "r": "#DA344D",   # red
               "g": "#169873",   # green
               "b": "#0A369D",   # blue
