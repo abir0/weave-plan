@@ -1,32 +1,55 @@
 import argparse
 import math
+import re
 from itertools import cycle
 from PIL import Image, ImageDraw
 
 
 class Weave:
-    Colors = {"0": "#000000",
-              "1": "#ffffff",
-              "r": "#DA344D",
-              "g": "#169873",
-              "b": "#0A369D",
-              "y": "#F7EE7F",
-              "o": "#F26419",
-              "v": "#4F345A",
-              "p": "#F15BB5",
-              "i": "#284B63",
+    Colors = {"0": "#000000",   # black
+              "1": "#ffffff",   # white
+              "r": "#DA344D",   # red
+              "g": "#169873",   # green
+              "b": "#0A369D",   # blue
+              "y": "#F7EE7F",   # yellow
+              "o": "#F26419",   # orange
+              "v": "#4F345A",   # violet
+              "p": "#F15BB5",   # pink
+              "i": "#284B63",   # indigo
     }
 
     def __init__(self, formula, dim, color, save):
         self.formula = str(formula)
         self.dim = int(dim)
-        self.color = str(color).lower()
+        self.color = Weave.parse_color(str(color))
         self.save = save
         self.size = 50
 
         self.weave_plan = list()
         self.create_weave_plan()
         self.color_weave = self.weave_plan.copy()
+
+    @staticmethod
+    def parse_color(string):
+        pattern1 = "^[a-z]+$"
+        pattern2 = "^([0-9][a-z])+$"
+        pattern3 = "^([a-z][0-9])+$"
+        string = string.lower()
+
+        if re.search(pattern1, string) is not None:
+            return string
+        elif re.search(pattern2, string) is not None:
+            color = ""
+            for s, n in zip(string[1::2], string[::2]):
+                color += s*int(n)
+            return color
+        elif re.search(pattern3, string) is not None:
+            color = ""
+            for s, n in zip(string[::2], string[1::2]):
+                color += s*int(n)
+            return color
+        else:
+            return ""
 
     def show_weave_plan(self):
         for i in range(self.dim):
