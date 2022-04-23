@@ -24,4 +24,6 @@ python weave.py -f 11 -c iioo -d 20 -s
 Output:
 
 The command above will generate this weave pattern (crow's foot weave) in the [figs](./figs/) folder.
-<center><img src=".\figs\11_iioo(20x20).jpg" width="400px"></center>
+<p align="center">
+  <img src=".\figs\11_iioo(20x20).jpg" width="400px">
+</p>
