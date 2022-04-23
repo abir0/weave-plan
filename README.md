@@ -1,6 +1,10 @@
 # Weave plan
 Generate weave plan from formula no and color ratios.
 
+### Dependencies
+
+- [Pillow](https://pypi.org/project/Pillow/) (PIL or Python Imaging Library fork) 
+
 ### Usage
 
 This program has the following arguments:
