@@ -104,7 +104,7 @@ class Weave:
         #         print(self.color_weave[i][j], end =" ")
         #     print()
 
-    def create_figure(self):
+    def create_figure(self, dir="figs"):
         w, h = self.dim*self.size+50, self.dim*self.size+50
         self.image = Image.new("RGB", (w, h))
 
@@ -116,8 +116,11 @@ class Weave:
                 img.rectangle(shape, fill=self.Colors[col], outline="#EBE9E9")
 
         if self.save:
-            filename = "figs/{}_{}({}x{}).jpg".format(self.formula, self.color,
-                                                      self.dim, self.dim)
+            filename = "{}/{}_{}({}x{}).jpg".format(dir,
+                                                    self.formula,
+                                                    self.color,
+                                                    self.dim,
+                                                    self.dim)
             with open(filename, "w") as file:
                 self.image.save(file)
         else:
