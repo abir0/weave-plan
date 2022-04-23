@@ -129,11 +129,11 @@ def main():
     parser.add_argument("-f", "--formula", type=str, default="11",
                         help="input formula number")
     parser.add_argument("-d", "--dim", type=int, default=10,
-                        help="input n-dimension")
+                        help="input shape")
     parser.add_argument("-c", "--color", type=str, default="",
-                        help="input n-dimension")
+                        help="input color ratio")
     parser.add_argument("-s", "--save", action='store_true',
-                        help="input n-dimension")
+                        help="save as image")
     args = parser.parse_args()
 
     weave = Weave(args.formula, args.dim, args.color, args.save)
