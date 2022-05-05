@@ -20,7 +20,7 @@ Generate weave plan from formula no and color ratios.
 This program has the following arguments:
 
 ```
-usage: weave.py [-h] [-f FORMULA] [-d DIM] [-c COLOR] [-s]
+usage: planner.py [-h] [-f FORMULA] [-d DIM] [-c COLOR] [-s]
 
 optional arguments:
   -h, --help                       show this help message and exit
@@ -59,7 +59,7 @@ The color ratio is the number of different colors of threads in both warp and we
 The command below produces 1 up, 1 down weave construction with 2:2 color ratio of indigo and orange colored threads in both warp and weft direction. This is also known as Crows Foot Weave. The output is generated in the [figs](./figs/) folder as a JPEG image file.
 
 ```bash
-python weave.py -f 11 -c 2i2o -d 20 -s
+python planner.py -f 11 -c 2i2o -d 20 -s
 ```
 
 Output:
