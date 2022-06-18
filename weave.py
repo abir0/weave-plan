@@ -1,12 +1,13 @@
 import sys
 import math
 from itertools import cycle
+import numpy as np
 from PIL import Image, ImageDraw
 
 
 class Weave:
-    Colors = {"0": "#000000",   # black
-              "1": "#FFFFFF",   # white
+    Colors = {"1": "#000000",   # black
+              "0": "#FFFFFF",   # white
               "r": "#DA344D",   # red
               "g": "#169873",   # green
               "b": "#0A369D",   # blue
@@ -28,19 +29,18 @@ class Weave:
         self.save = save
         self.size = 50
 
-        self.weave_plan = list()
-        self.create_weave_plan()
+        self.weave_plan = self.create_weave_plan()
         self.color_weave = self.weave_plan.copy()
 
 
     def parse_formula_number(self, formula_no):
-        return list(formula_no.split("/"))
+        return formula_no.split("/")
 
 
     def parse_color_ratio(self, color_ratio):
         if not color_ratio:
             return []
-        return list(color_ratio.split(":"))
+        return color_ratio.split(":")
 
 
     def parse_color_order(self, colors):
@@ -54,8 +54,8 @@ class Weave:
         if not colors:
             colors = c_string[:len(self.color_ratio)]
 
-        str_mul = lambda x: int(x[0]) * x[1]
-        return "".join(list(map(str_mul, zip(self.color_ratio, colors))))
+        func = lambda x: int(x[0]) * x[1]
+        return "".join(list(map(func, zip(self.color_ratio, colors))))
 
 
     def parse_dim(self, dim, show_repeat):
@@ -64,8 +64,9 @@ class Weave:
         try:
             return int(dim), int(dim)
         except:
-            if dim.find("x") != -1:
-                return list(int(s) for s in dim.split("x"))
+            if "x" in dim:
+                dims = dim.split("x")
+                return int(dims[0]), int(dims[1])
             else:
                 print(f"Incorrent dimension shape syntax.")
                 return sys.exit()
@@ -79,60 +80,57 @@ class Weave:
             c = sum([int(i) for i in self.color_ratio])
             return (math.lcm(f, c), math.lcm(f, c))
 
-    # TODO:
-    def repeat_unit(self):
-        if self.color_order == "":
-            s = sum(self.formula_no)
-            self.repeat_unit = (s, s)
-
 
     def create_weave_plan(self):
-        arr = []
-        col = ""
+        weave = []
+        warp = ""
 
-        for i, f in enumerate(self.formula_no):
+        for i, num in enumerate(self.formula_no):
             if i%2 == 0:
-                col += "0"*int(f)
+                warp += "1"*int(num)
             else:
-                col += "1"*int(f)
+                warp += "0"*int(num)
 
-        col = col*math.ceil(self.dim[0])
-        col = col[::-1]
+        warp = warp*math.ceil(self.dim[1]/len(warp))
+        warp = warp[::-1]
 
-        arr.append(list(col))
-        for i in range(len(col)-1):
-            col = col[1:] + col[0]
-            arr.append(list(col))
+        weave.append(list(warp))
+        for i in range(len(warp)-1):
+            warp = warp[1:] + warp[0]
+            weave.append(list(warp))
+        weave = np.array(weave)
+        weave = weave.T
 
-        for i in range(len(arr)):
-            arr[i] = arr[i][:self.dim[0]]
-        arr = arr[len(arr)-self.dim[0]:]
-        self.weave_plan = arr
+        weave = np.delete(weave,
+                          np.s_[self.dim[0]:weave.shape[0]],
+                          axis=0)
+        weave = np.delete(weave,
+                          np.s_[0:weave.shape[1]-self.dim[1]],
+                          axis=1)
+
+        return weave.tolist()
 
 
     def show_weave_plan(self):
-        for i in range(self.dim[0]):
-            for j in range(self.dim[1]):
-                print(self.weave_plan[i][j], end =" ")
+        for i in range(self.dim[1]):
+            for j in range(self.dim[0]):
+                print(self.weave_plan[j][i], end =" ")
             print()
 
 
     def create_color_weave(self):
         if self.color_order == "":
-            # print("colorless weave")
             return
         weft = self.color_order
 
-        length = len(weft)
-        weft = weft*math.ceil(self.dim[0]/length)
-        weft = weft[:self.dim[0]]
+        weft = weft*math.ceil(self.dim[0]/len(weft))
         weft = weft[::-1]
 
         for i, row in enumerate(zip(self.weave_plan, weft)):
             for j, col in enumerate(zip(row[0], cycle(self.color_order))):
-                if col[0] == "1":
-                    self.color_weave[i][j] = col[1]
                 if col[0] == "0":
+                    self.color_weave[i][j] = col[1]
+                if col[0] == "1":
                     self.color_weave[i][j] = row[1]
 
 
@@ -146,7 +144,7 @@ class Weave:
                          ((i+1)*self.size-25, (j+1)*self.size-25)]
                 img = ImageDraw.Draw(self.image)
                 img.rectangle(shape,
-                              fill=self.Colors[col],
+                              fill=self.Colors[str(col)],
                               outline="#bbb",
                               width=2)
 
