@@ -60,7 +60,7 @@ The color ratio is the number and order of different colors of threads in both w
 
 #### Example usage
 
-The command below produces 2 up, 2 down weave construction with 6:6 color ratio of indigo and orange colored threads in both warp and weft direction. This is known as Hound's Tooth Weave. The output is a JPEG file, generated in the [figs](./figs/) folder.
+The command below produces 2 up, 2 down weave construction with 4:4 color ratio of indigo and orange colored threads in both warp and weft direction. This is known as Hound's Tooth Weave. The output is a JPEG file, generated in the [figs](./figs/) folder.
 
 ```bash
 python planner.py -fn 2/2 -cr 6:6 -d 30 -s
@@ -69,6 +69,6 @@ python planner.py -fn 2/2 -cr 6:6 -d 30 -s
 Output:
 
 <p align="center">
-  <img src=".\figs\22_66.jpg" width="400px"><br>
+  <img src=".\figs\22_44.jpg" width="400px"><br>
   <i> Hound's Tooth Weave </i>
 </p>
