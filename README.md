@@ -4,14 +4,16 @@ Generate weave plan from formula no and color ratios.
 
 ### Dependencies
 
+- [numpy](https://pypi.org/project/numpy/)
 - [Pillow](https://pypi.org/project/Pillow/) (fork of PIL or Python Imaging Library)
 
 
 ### Features
 
-- Construction of  plain, twill, satin or any other weave plan from formula number e.g. 4 up, 3 down.
-- Create color weave plan from color ratio along with formula number e.g. 1 up, 1 down and 2:2 color ratio.
-- Make the weave plan of any desired shape.
+- Construction of plain, twill, satin or any other weave plan from formula number e.g. 4 up, 3 down.
+- Create color and weave effect from color ratio(s) along with formula number e.g. 1 up, 1 down and 2:2 color ratio.
+- Find out the repeat unit of the specified types of weave plan.
+- Create the weave plan of any desired shape.
 - Save the weave plan in JPEG file format.
 
 
@@ -20,23 +22,25 @@ Generate weave plan from formula no and color ratios.
 This program has the following arguments:
 
 ```
-usage: planner.py [-h] [-f FORMULA] [-d DIM] [-c COLOR] [-s]
+usage: planner.py [-h] [-fn FORMULA_NO] [-cr COLOR_RATIO] [-c COLORS] [-d DIM] [-r] [-s]
 
 optional arguments:
-  -h, --help                       show this help message and exit
-  -f FORMULA, --formula FORMULA    input formula number
-  -d DIM, --dim DIM                input shape
-  -c COLOR, --color COLOR          input color ratio
-  -s, --save                       save as image
+  -h, --help                                    show this help message and exit
+  -fn FORMULA_NO, --formula-no FORMULA_NO       input formula number
+  -cr COLOR_RATIO, --color-ratio COLOR_RATIO    input color ratio
+  -c COLORS, --colors COLORS                    input color string
+  -d DIM, --dim DIM                             input shape
+  -r, --show-repeat                             show repeat unit
+  -s, --save                                    save as image
 ```
 
 #### Formula number
 
-The formula number is the numerical description of the weave repeat unit. This program takes the formula no as input from the `-f` or `--formula` flag. The input sequence of numbers (1 to 9) represent the formula no. Odd sequence of numbers represent the warp threads up and the even sequence represent the warp threads down e.g. input `3112` will represent 3 up, 1 down, 1 up, 2 down.
+The formula number is the numerical description of the weave repeat unit. This program takes the formula no from the `-fn` or `--formula-no` flag. The input sequence of numbers separated by `/` represent the formula number. Numbers in odd sequence represent the warp threads up and the even sequence represent the weft threads up or warp thread down e.g. input `3/2` represents 3 up, 2 down.
 
 #### Color ratio
 
-The color ratio is the number of different colors of threads in both warp and weft direction. This program takes the color ratio as input from the `-c` or `--color` flag. It is represented as the sequence of alphabets, each of which corresponds to a hex color code. This can be given as a sequence of alphabets e.g. `rrbb` where _r_ and _b_ corresponds to red and blue respectively and the sequence of these represent the color ratio, so in this case it represents 2:2 color ratio of red and blue in both warp and weft direction. Another way to do this is to put the number in front or back of the alphabet to represent the number of time they repeat e.g. `3r4b` is equivalent to `rrrbbbb`.
+The color ratio is the number and order of different colors of threads in both warp and weft direction. This program takes the color ratio from the `-cr` or `--color-ratio` flag. It is represented by the sequence of numbers separated by `:`. So `3:2` color ratio means two different colors are used and 3 threads of the first color is followed by 2 threads of the second color. This order of coloring is repeated in both warp and weft direction.
 
 **Suported colors:**
 
@@ -56,15 +60,15 @@ The color ratio is the number of different colors of threads in both warp and we
 
 #### Example usage
 
-The command below produces 1 up, 1 down weave construction with 2:2 color ratio of indigo and orange colored threads in both warp and weft direction. This is also known as Crows Foot Weave. The output is generated in the [figs](./figs/) folder as a JPEG image file.
+The command below produces 2 up, 2 down weave construction with 6:6 color ratio of indigo and orange colored threads in both warp and weft direction. This is known as Hound's Tooth Weave. The output is a JPEG file, generated in the [figs](./figs/) folder.
 
 ```bash
-python planner.py -f 11 -c 2i2o -d 20 -s
+python planner.py -fn 2/2 -cr 6:6 -d 30 -s
 ```
 
 Output:
 
 <p align="center">
-  <img src=".\figs\11_iioo(20x20).jpg" width="400px"><br>
-  <i> Crows Foot Weave </i>
+  <img src=".\figs\22_66.jpg" width="400px"><br>
+  <i> Hound's Tooth Weave </i>
 </p>

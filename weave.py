@@ -149,11 +149,9 @@ class Weave:
                               width=2)
 
         if self.save:
-            filename = "{}/{}_{}({}x{}).jpg".format(dir,
-                                                    "".join(self.formula_no),
-                                                    self.color_order,
-                                                    self.dim[0],
-                                                    self.dim[1])
+            filename = "{}/{}_{}.jpg".format(dir,
+                                             "".join(self.formula_no),
+                                             "".join(self.color_ratio))
             with open(filename, "w") as file:
                 self.image.save(file)
         else:
