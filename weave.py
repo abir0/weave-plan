@@ -1,4 +1,5 @@
 import sys
+import re
 import math
 from itertools import cycle
 import numpy as np
@@ -33,14 +34,34 @@ class Weave:
         self.color_weave = self.weave_plan.copy()
 
 
-    def parse_formula_number(self, formula_no):
-        return formula_no.split("/")
+    def parse_formula_number(self, formula):
+        self.warp_rib = None
+        self.weft_rib = None
+
+        formula_pattern = r"^\d+\/\d+(?:\/\d+)*"
+        warp_rib_pattern = r"\([Ww].*\)"
+        weft_rib_pattern = r"\((\d+(?:\+\d+)?)\)"
+
+        formula_no = re.findall(formula_pattern, formula)
+        warp_rib_no = re.findall(warp_rib_pattern, formula)
+        weft_rib_no = re.findall(weft_rib_pattern, formula)
+
+        if warp_rib_no or (weft_rib_no and formula_no[0].count("1") < 2):
+            self.warp_rib = list(map(int, formula_no[0].split("/")))
+            formula_no = ["1/1"]
+        if weft_rib_no:
+            if "+" in weft_rib_no[0]:
+                self.weft_rib = list(map(int, weft_rib_no[0].split("+")))
+            else:
+                self.weft_rib = [int(weft_rib_no[0])]*2
+
+        return list(map(int, formula_no[0].split("/")))
 
 
     def parse_color_ratio(self, color_ratio):
         if not color_ratio:
             return []
-        return color_ratio.split(":")
+        return list(map(int, color_ratio.split(":")))
 
 
     def parse_color_order(self, colors):
@@ -54,7 +75,7 @@ class Weave:
         if not colors:
             colors = c_string[:len(self.color_ratio)]
 
-        func = lambda x: int(x[0]) * x[1]
+        func = lambda x: x[0] * x[1]
         return "".join(list(map(func, zip(self.color_ratio, colors))))
 
 
@@ -73,11 +94,11 @@ class Weave:
 
 
     def find_repeat_size(self):
-        f = sum([int(i) for i in self.formula_no])
+        f = sum(self.formula_no)
         if not self.color_ratio:
             return (f, f)
         else:
-            c = sum([int(i) for i in self.color_ratio])
+            c = sum(self.color_ratio)
             return (math.lcm(f, c), math.lcm(f, c))
 
 
@@ -87,19 +108,41 @@ class Weave:
 
         for i, num in enumerate(self.formula_no):
             if i%2 == 0:
-                warp += "1"*int(num)
+                warp += "1"*num
             else:
-                warp += "0"*int(num)
+                warp += "0"*num
 
         warp = warp*math.ceil(self.dim[1]/len(warp))
         warp = warp[::-1]
-
         weave.append(list(warp))
+
         for i in range(len(warp)-1):
             warp = warp[1:] + warp[0]
             weave.append(list(warp))
+
+        if self.warp_rib:
+            warp_no = cycle(range(len(self.warp_rib)))
+            temp = []
+            for warp in weave[1:len(weave)]:
+                for _ in range(self.warp_rib[next(warp_no)]):
+                    temp.append(warp)
+                warp_no = iter(warp_no)
+            weave = temp
+
         weave = np.array(weave)
         weave = weave.T
+
+        if self.weft_rib:
+            weft_no = cycle(range(len(self.weft_rib)))
+            temp = []
+            for weft in weave:
+                for _ in range(self.weft_rib[next(weft_no)]):
+                    temp.append(weft.tolist())
+                weft_no = iter(weft_no)
+            weave = np.array(temp)
+
+        if self.warp_rib and self.weft_rib:
+            pass
 
         weave = np.delete(weave,
                           np.s_[self.dim[0]:weave.shape[0]],
